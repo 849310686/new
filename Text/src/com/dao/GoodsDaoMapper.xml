@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--映射文件-->
+<!--等于dao接口的实现，namespace属性值必须和接口的类路径一致-->
+<!-- 要实现的接口的包名  namespace="com.dao.GoodsDao"-->
+<mapper namespace="com.dao.GoodsDao">
+	
+	<!--实现Dao方法的标签，用于编写sql语句。SQL语句中以“#{}”的形式引用参数-->
+<!--     <标签名 id="方法名" parameterType="入参类型" resultType="返回值类型">  	 
+        sql语句
+    </标签名> -->
+    <sql id="jggkhgkjh">
+    ID,NAME
+    </sql>
+    <!-- select标签  专门做查询    id为方法名  parameterType有参数的话写参数类型 resultType返回结果（Goods对象，因为起了别名，用Goods）-->
+     <select id="findById" parameterType="String" resultType="Goods">      
+     select <include refid="jggkhgkjh"></include>
+      from goods where id=#{id}
+     </select>
+     
+     <select id="findByGoodsQuery" parameterType="GoodsQuery" 
+        resultType="Goods">
+    SELECT * FROM goods 
+    <where>
+     <if test="name!=null">
+        AND NAME LIKE '%'||#{name}||'%'
+    </if>
+    <if test="minPrice!=null">
+        AND price >= ${minPrice}
+    </if>
+    <if test="maxPrice!=null">
+        AND ${maxPrice}>=price
+    </if>
+    </where>
+    </select>
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     <select id="findAll" resultType="Goods">
+     select * from goods
+     </select>
+     <insert id="insert" parameterType="Goods">
+     <!-- #$  #加在文本上  $加在数值上 -->
+     <!-- (id,name,price) values(#{id},#{name},${price}) -->
+     insert into goods 
+     <trim prefix="(" suffix=")" suffixOverrides=",">
+     <if test="id!=null">id,</if>
+     <if test="name!=null">name,</if>
+     <if test="price!=null">price,</if>
+     </trim>
+     <trim prefix="values(" suffix=")" suffixOverrides=",">
+     <if test="id!=null">#{id},</if>
+     <if test="name!=null">#{name},</if>
+     <if test="price!=null">${price},</if>
+     </trim>
+     </insert>
+     <update id="update" parameterType="Goods">
+     update goods 
+     <set>
+     <if test="name!=null">name=#{name},</if>
+     <if test="price!=null">price=${price}</if>
+     </set>
+      where id=#{id}
+     </update>
+     <delete id="delete" parameterType="String">
+     delete from goods where id=#{id}
+     </delete>
+     <select id="findByIdForMap" parameterType="String" resultType="map">
+     select * from goods where id=#{id}
+     </select>
+     <select id="findAllForMap" resultType="map">
+      select * from goods
+     </select>
+     <select id="findByPage" resultType="Goods">
+     select * from goods
+     </select>
+     <select id="findByPage2" parameterType="int" resultType="Goods"> 
+     select * from(
+     select rownum as no,t1.* from
+     (select * from goods order by price desc
+     ) t1
+     ) t2
+     where no>=${param1} and ${param1} + ${param2} > no
+     </select>
+     <select id="findByArray" resultType="Goods">
+     select * from goods where id in 
+     <foreach collection="array" item="item" index="i" open="(" separator="," close=")">
+     #{item}
+     </foreach>
+     </select>
+</mapper>

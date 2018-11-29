@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <!-- 加载资源文件 -->
+    <properties resource="dbinfo.properties"></properties>
+<!--     全局配置
+    <settings>
+        <setting name="参数名" value= "参数值" />
+        是否开启自动驼峰命名规则（camel case）映射，即从经典数据库列名A_COLUMN到经典Java属性名aColumn的类似映射。默认false
+        <setting name="mapUnderscoreToCamelCase" value="true" /> 
+    </settings>
+    命名时_
+    
+     -->  
+    <!-- 配置实体类别名 -->
+    <typeAliases>
+  	    <!--<typeAlias type="com.model.User" alias="User" />-->
+  	    <!-- 如果指定自动扫描包名，该包之下的类名，可以做为别名使用-->
+  	    <!-- 自动起别名，别名为类名 -->
+  	    <package name="com.model"/>
+    </typeAliases>
+    
+    <!--配置数据源-->
+    <environments default="dataSource"> 
+  	    <environment id="dataSource">
+  	 	    <transactionManager type="jdbc"/>	  
+		    <dataSource type="POOLED">
+  	 	        <property name="driver" value="${driver}"/>
+                <property name="url" value="${url}"/>
+  	 	        <property name="username" value="${username}"/>
+  	 	        <property name="password" value="${password}"/>
+  	 	    </dataSource>
+  	    </environment> 
+    </environments>
+  
+    <!--装载Dao映射文件-->
+    <mappers>
+  	    <mapper resource="com/dao/GoodsDaoMapper.xml"/>
+    </mappers>
+  
+</configuration>
